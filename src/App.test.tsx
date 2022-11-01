@@ -1,5 +1,5 @@
 import { render, screen , fireEvent } from '@testing-library/react';
-import { App, ArtItem } from './App';
+import { App } from './App';
 
 test('has title', () => {
   render(<App />);
