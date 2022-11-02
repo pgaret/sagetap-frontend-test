@@ -24,6 +24,11 @@ export const NewArtworkForm: FC<NewArtFormProps> = (props) => {
     const [artworkId, setArtworkId] = useState<string>("");
     const [error, setError] = useState<string>("");
 
+    const handleIdChange = (event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+        if (error) setError("");
+        setArtworkId(event.currentTarget.value);
+    }
+
     const onArtworkSubmit = async () => {
         const id = Number(artworkId);
 
@@ -54,10 +59,12 @@ export const NewArtworkForm: FC<NewArtFormProps> = (props) => {
             <TextField
                 id="new-art-id"
                 value={artworkId}
-                onChange={(event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => setArtworkId(event.currentTarget.value)}
+                onChange={handleIdChange}
                 label="Artwork Id"
                 variant="standard"
                 size="small"
+                required
+                error={!!error}
                 sx={{
                     margin: '0 4px'
                 }}
