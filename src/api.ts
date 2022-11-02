@@ -11,12 +11,12 @@ export const queryArtwork = async (id: number) => {
     } catch (error) {
         return error;
     }
-}
+};
 
 type ArtworkRating = {
     id: number;
     rating: number;
-}
+};
 
 export const rateArtwork = async (rating: ArtworkRating) => {
     try {
@@ -31,4 +31,4 @@ export const rateArtwork = async (rating: ArtworkRating) => {
     } catch (error) {
         return error;
     }
-}
+};

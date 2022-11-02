@@ -61,7 +61,7 @@ export const ArtworkItem: FC<ArtItemProps> = (props) => {
 
     const handleSnackbarClose = () => {
         setIsSnackbarOpen(false);
-    }
+    };
 
     const submitRating = async () => {
         setRatingStatus(RatingStatus.RATING_LOADING);
@@ -82,13 +82,13 @@ export const ArtworkItem: FC<ArtItemProps> = (props) => {
     useEffect(() => {
         if (disabled) return;
 
-        const getArtwork = async() => {
+        const getArtwork = async () => {
             const response = await queryArtwork(id);
 
             if (response.data) {
-                setArtwork(response.data)
+                setArtwork(response.data);
             }
-        }
+        };
 
         getArtwork();
     }, [id, disabled]);
@@ -142,7 +142,7 @@ export const ArtworkItem: FC<ArtItemProps> = (props) => {
                             </Typography>
                         </CardContent>
                     </Box>
-                    
+
                     <CardActions
                         sx={{
                             paddingBottom: "16px",
@@ -192,7 +192,10 @@ export const ArtworkItem: FC<ArtItemProps> = (props) => {
                                         }
                                         onClick={() => setRating(r)}
                                         data-testid={`rate-${r}`}
-                                        disabled={ratingStatus !== RatingStatus.NOT_RATED}
+                                        disabled={
+                                            ratingStatus !==
+                                            RatingStatus.NOT_RATED
+                                        }
                                     >
                                         {r}
                                     </Button>
@@ -219,7 +222,11 @@ export const ArtworkItem: FC<ArtItemProps> = (props) => {
                     </CardActions>
                 </Box>
             )}
-            <Snackbar anchorOrigin={{ vertical: 'top', horizontal: 'center' }} open={isSnackbarOpen} onClose={handleSnackbarClose}>
+            <Snackbar
+                anchorOrigin={{ vertical: "top", horizontal: "center" }}
+                open={isSnackbarOpen}
+                onClose={handleSnackbarClose}
+            >
                 <Alert onClose={handleSnackbarClose} severity="success">
                     Artwork successfully rated!
                 </Alert>

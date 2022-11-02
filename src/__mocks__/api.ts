@@ -1,4 +1,4 @@
-export const queryArtwork = async(id: number) => {
+export const queryArtwork = async (id: number) => {
     return {
         data: {
             id: id,
@@ -12,10 +12,10 @@ export const queryArtwork = async(id: number) => {
 type ArtworkRating = {
     id: number;
     rating: number;
-}
+};
 
-export const rateArtwork = async(rating: ArtworkRating) => {
+export const rateArtwork = async (rating: ArtworkRating) => {
     return {
-        message: 'Success'
-    }
+        message: "Success",
+    };
 };

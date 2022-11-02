@@ -97,5 +97,10 @@ test("for an art item, clicking submit POSTs update, displays a toast success me
 
     fireEvent.click(ratingButtons[0]);
 
-    await waitFor(() => expect(screen.getByText('Artwork successfully rated!')).toBeInTheDocument());
+    // eslint-disable-next-line testing-library/prefer-find-by
+    await waitFor(() =>
+        expect(
+            screen.getByText("Artwork successfully rated!")
+        ).toBeInTheDocument()
+    );
 });
