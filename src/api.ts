@@ -32,5 +32,3 @@ export const rateArtwork = async (rating: ArtworkRating) => {
         return error;
     }
 }
-
-export default { queryArtwork, rateArtwork}

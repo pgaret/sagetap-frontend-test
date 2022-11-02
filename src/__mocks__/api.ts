@@ -19,7 +19,3 @@ export const rateArtwork = async(rating: ArtworkRating) => {
         message: 'Success'
     }
 };
-
-const api = { queryArtwork, rateArtwork}
-
-export default api;
