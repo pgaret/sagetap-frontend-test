@@ -2,10 +2,9 @@
 
 import React, { useEffect, useState } from 'react';
 import Box from '@mui/material/Box'
-import { Artwork } from './components/Artwork/Artwork';
+import { ArtworkItem } from './components/ArtworkItem/ArtworkItem';
 import { NewArtworkForm, ArtworkMeta } from './components/NewArtworkForm/NewArtworkForm';
 import { TopBar } from './components/TopBar/TopBar';
-
 
 export const App = () => {
   const [artworks, setArtworks] = useState<ArtworkMeta[]>([
@@ -16,8 +15,8 @@ export const App = () => {
     { id: 27993, disabled: false },
   ]);
 
-  const handleAddArtwork = (newArtwork: ArtworkMeta) => {
-    setArtworks([...artworks, newArtwork])
+  const handleAddArtwork = (id: number) => {
+    setArtworks([...artworks, { id, disabled: false }])
   }
 
   return (
@@ -36,9 +35,9 @@ export const App = () => {
         height: 'calc(100vh - 193px)',
         overflow: 'auto'
       }}>
-          {artworks.map((art: any) => <Artwork key={art.id} id={art.id} disabled={art.disabled} />)}
+          {artworks.map((art: any) => <ArtworkItem key={art.id} id={art.id} disabled={art.disabled} />)}
       </Box>
-      <NewArtworkForm handleAddArtwork={handleAddArtwork} />
+      <NewArtworkForm handleAddArtwork={handleAddArtwork} artworks={artworks} />
     </Box>
   );
 }
