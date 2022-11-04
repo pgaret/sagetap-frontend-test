@@ -1,18 +1,18 @@
 import React, { FC, useEffect, useMemo, useState } from "react";
-import Alert from "@mui/material/Alert";
 import Box from "@mui/material/Box";
+import Button from "@mui/material/Button";
+import ButtonGroup from "@mui/material/ButtonGroup";
 import Card from "@mui/material/Card";
 import CardActions from "@mui/material/CardActions";
 import CardContent from "@mui/material/CardContent";
 import CardMedia from "@mui/material/CardMedia";
-import Button from "@mui/material/Button";
-import ButtonGroup from "@mui/material/ButtonGroup";
+import IconButton from "@mui/material/IconButton";
 import Typography from "@mui/material/Typography";
+import LoadingButton from "@mui/lab/LoadingButton";
 import useMediaQuery from "@mui/material/useMediaQuery";
+import DeleteIcon from "@mui/icons-material/Delete";
 import HideImageIcon from "@mui/icons-material/HideImage";
 import SendIcon from "@mui/icons-material/Send";
-import Snackbar from "@mui/material/Snackbar";
-import LoadingButton from "@mui/lab/LoadingButton";
 import { queryArtwork, rateArtwork } from "../../api";
 
 type Artwork = {
@@ -32,17 +32,18 @@ enum RatingStatus {
 type ArtItemProps = {
     id: number;
     disabled: boolean;
+    handleRemoveArtwork: (id: number) => void;
+    handleSnackbarMessage: (message: string) => void;
 };
 
 export const ArtworkItem: FC<ArtItemProps> = (props) => {
-    const { id, disabled } = props;
+    const { id, disabled, handleRemoveArtwork, handleSnackbarMessage } = props;
 
     const [rating, setRating] = useState<number>(0);
     const [artwork, setArtwork] = useState<Artwork>();
     const [ratingStatus, setRatingStatus] = useState<RatingStatus>(
         RatingStatus.NOT_RATED
     );
-    const [isSnackbarOpen, setIsSnackbarOpen] = useState<boolean>(false);
 
     const mediaQuery = useMediaQuery("(min-width:600px)");
 
@@ -59,10 +60,6 @@ export const ArtworkItem: FC<ArtItemProps> = (props) => {
 
     const ratings = [1, 2, 3, 4, 5];
 
-    const handleSnackbarClose = () => {
-        setIsSnackbarOpen(false);
-    };
-
     const submitRating = async () => {
         setRatingStatus(RatingStatus.RATING_LOADING);
         try {
@@ -70,7 +67,7 @@ export const ArtworkItem: FC<ArtItemProps> = (props) => {
 
             if (response.message === "Success") {
                 setRatingStatus(RatingStatus.RATING_SUCCESS);
-                setIsSnackbarOpen(true);
+                handleSnackbarMessage("Artwork successfully rated");
             } else {
                 setRatingStatus(RatingStatus.RATING_ERROR);
             }
@@ -92,6 +89,10 @@ export const ArtworkItem: FC<ArtItemProps> = (props) => {
 
         getArtwork();
     }, [id, disabled]);
+
+    const onDeleteClick = () => {
+        handleRemoveArtwork(id);
+    };
 
     return (
         <Card sx={{ width: 400 }}>
@@ -176,6 +177,16 @@ export const ArtworkItem: FC<ArtItemProps> = (props) => {
                                 flexWrap: "wrap",
                             }}
                         >
+                            <IconButton
+                                color="error"
+                                onClick={onDeleteClick}
+                                disabled={
+                                    ratingStatus !== RatingStatus.NOT_RATED
+                                }
+                                data-testid="delete-item"
+                            >
+                                <DeleteIcon />
+                            </IconButton>
                             <ButtonGroup
                                 color={color}
                                 orientation={
@@ -222,15 +233,6 @@ export const ArtworkItem: FC<ArtItemProps> = (props) => {
                     </CardActions>
                 </Box>
             )}
-            <Snackbar
-                anchorOrigin={{ vertical: "top", horizontal: "center" }}
-                open={isSnackbarOpen}
-                onClose={handleSnackbarClose}
-            >
-                <Alert onClose={handleSnackbarClose} severity="success">
-                    Artwork successfully rated!
-                </Alert>
-            </Snackbar>
         </Card>
     );
 };

@@ -32,3 +32,7 @@ export const rateArtwork = async (rating: ArtworkRating) => {
         return error;
     }
 };
+
+const api = { queryArtwork, rateArtwork };
+
+export default api;

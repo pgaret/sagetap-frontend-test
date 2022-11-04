@@ -1,10 +1,10 @@
 import React, { FC, useState } from "react";
-import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
 import TextField from "@mui/material/TextField";
 import Typography from "@mui/material/Typography";
 import useMediaQuery from "@mui/material/useMediaQuery";
 import { queryArtwork } from "../../api";
+import { Paper } from "@mui/material";
 
 export type ArtworkMeta = {
     id: number;
@@ -12,12 +12,13 @@ export type ArtworkMeta = {
 };
 
 type NewArtFormProps = {
-    handleAddArtwork: (id: number) => void;
     artworks: ArtworkMeta[];
+    handleAddArtwork: (id: number) => void;
+    handleSnackbarMessage: (message: string) => void;
 };
 
 export const NewArtworkForm: FC<NewArtFormProps> = (props) => {
-    const { artworks, handleAddArtwork } = props;
+    const { artworks, handleAddArtwork, handleSnackbarMessage } = props;
 
     const isDesktop = useMediaQuery("(min-width:600px)");
 
@@ -31,7 +32,9 @@ export const NewArtworkForm: FC<NewArtFormProps> = (props) => {
         setArtworkId(event.currentTarget.value);
     };
 
-    const onArtworkSubmit = async () => {
+    const onArtworkSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
+        event.preventDefault();
+
         const id = Number(artworkId);
 
         if (artworks.findIndex((art) => art.id === id) > -1) {
@@ -48,6 +51,7 @@ export const NewArtworkForm: FC<NewArtFormProps> = (props) => {
                 handleAddArtwork(id);
                 setArtworkId("");
                 setError("");
+                handleSnackbarMessage("Artwork successfully added");
             }
         } catch {
             setError("Artwork does not exist");
@@ -55,43 +59,57 @@ export const NewArtworkForm: FC<NewArtFormProps> = (props) => {
     };
 
     return (
-        <Box
-            display="flex"
-            alignItems={isDesktop ? "end" : "center"}
-            justifyContent="center"
-            flexWrap="wrap"
-            flexDirection={isDesktop ? "row" : "column"}
-        >
-            <Typography variant="h6">Add Artwork:</Typography>
-            <TextField
-                id="new-art-id"
-                value={artworkId}
-                onChange={handleIdChange}
-                label="Artwork Id"
-                variant="standard"
-                size="small"
-                required
-                error={!!error}
+        <form onSubmit={onArtworkSubmit}>
+            <Paper
                 sx={{
-                    margin: "0 4px",
+                    display: "flex",
+                    alignItems: isDesktop ? "end" : "center",
+                    justifyContent: "center",
+                    flexWrap: "wrap",
+                    flexDirection: isDesktop ? "row" : "column",
+                    width: "50vw",
+                    marginLeft: "25vw",
+                    paddingTop: "16px",
+                    paddingBottom: "32px",
                 }}
-            />
-            <Button
-                variant="contained"
-                disabled={!artworkId}
-                onClick={onArtworkSubmit}
             >
-                Submit
-            </Button>
-            {error && (
-                <Typography
-                    color="error.main"
-                    component="div"
-                    sx={{ marginLeft: "4px" }}
-                >
-                    {error}
+                <Typography variant="h6" sx={{ marginLeft: "4px" }}>
+                    Add Artwork:
                 </Typography>
-            )}
-        </Box>
+                <TextField
+                    id="new-art-id"
+                    value={artworkId}
+                    onChange={handleIdChange}
+                    label="Artwork Id"
+                    variant="standard"
+                    size="small"
+                    required
+                    error={!!error}
+                    sx={{
+                        margin: "0 4px",
+                    }}
+                    inputProps={{
+                        "data-testid": "new-art-input",
+                    }}
+                />
+                <Button
+                    variant="contained"
+                    disabled={!artworkId}
+                    type="submit"
+                    data-testid="new-art-submit"
+                >
+                    Submit
+                </Button>
+                {error && (
+                    <Typography
+                        color="error.main"
+                        component="div"
+                        sx={{ marginLeft: "4px" }}
+                    >
+                        {error}
+                    </Typography>
+                )}
+            </Paper>
+        </form>
     );
 };
